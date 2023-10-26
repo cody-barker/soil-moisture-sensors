@@ -76,27 +76,32 @@ void setup() {
 }
 
 void loop() {
-    temp = dht.readTemperature();                                      //Record temperature
+    //take temp and humidity readings
+    temp = dht.readTemperature();
     humid = dht.readHumidity();
-    tempF = (temp * 1.8) + 32;                                         //Calibrating to match thermostat in apt
+    //convert temp from C to F
+    tempF = (temp * 1.8) + 32;
 
-    
-    dataPoint.addField("temperature", tempF);                              // Store measured value into point
+    //store temp and humidity readings in points
+    dataPoint.addField("temperature", tempF);
     dataPoint.addField("humidity", humid);
-    Serial.print("Temp C: ");                                            //Display readings on serial monitor
+
+    //display readings in serial monitor of Arduino IDE
+    Serial.print("Temp C: ");
     Serial.println(temp);
-    Serial.print("Temp F: ");                                            //Display readings on serial monitor
+    Serial.print("Temp F: ");
     Serial.println(tempF);
     Serial.print("Humidity: ");
-    Serial.println(humid);                                // Store measured value into point
+    Serial.println(humid);
+
     int sensorPercent[numSensors];
 
-                                        //Record humidity
-
+    //take soil moisture readings
     for (int i = 0; i < numSensors; ++i) {
         sensorPercent[i] = sensors[i].readPercent();
     }
 
+    //add bounds to mapped values in event they are <0% or >100%
     for (int i = 0; i < numSensors; ++i) {
         if (sensorPercent[i] > 100) {
             sensorPercent[i] = 100;
@@ -104,12 +109,14 @@ void loop() {
             sensorPercent[i] = 0;
         }
 
+        //print the sensor reading as a soil moisture percentage
         Serial.print("Sensor ");
         Serial.print(i + 1);
         Serial.print(": ");
         Serial.print(sensorPercent[i]);
         Serial.println("%");
 
+        //store each sensor's moisture percentage reading in a point
         dataPoint.addField("sensor" + String(i + 1) + "Percent", sensorPercent[i]);
     }
 
@@ -122,5 +129,7 @@ void loop() {
         Serial.println(client.getLastErrorMessage());
     }
 
+    //use ESP32's deep sleep feature to save power. Argument in microseconds.
+    //Default to 1 reading per hour since moisture percentage changes slowly.
     esp_deep_sleep(3600000000);  
 }

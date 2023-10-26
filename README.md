@@ -1,4 +1,4 @@
-# moisture_sensors
+# Soil Moisture, Temp and Humidity Sensors
 Send soil moisture, temp, and humidity readings to an InfluxDB database, so that you can visualize them with your own Grafana dashboard.
 
 The .ino file in this repo will allow you post sensor readings to an InfluxDB, so that you can visualize those readings with Grafana. Part of it is borrowed from <a href="https://www.youtube.com/@MichaelKlements">Michael Klements</a>, and part of it I customized to handle however many moisture sensors you want to use.

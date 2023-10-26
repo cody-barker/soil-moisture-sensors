@@ -8,12 +8,17 @@ Check out <a href="https://www.youtube.com/watch?v=7M8MHa6W9w0&t=1041s&ab_channe
 ## Hardware
 -<a href="https://www.amazon.com/gp/product/B08246MCL5/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1">
 ESP32 WROOOM Development Board</a>
+<br>
 -<a href="https://www.amazon.com/gp/product/B07SYBSHGX/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1">
 High-quality capacitive soil moisture sensors</a>
+<br>
 -<a href="https://www.ebay.com/itm/354878228028">
 A DHT22 Digital Temp and Humidity Sensor</a>
+<br>
 -<a href="https://www.ebay.com/itm/223086170029?var=521899911923">
 a breadboard</a>
+<br>
 -<a href="https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_1_sspa?crid=3LKQVI91JXG5Z&keywords=jumper%2Bwires&qid=1698357369&s=electronics&sprefix=jumper%2Bwire%2Celectronics%2C157&sr=1-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1">
 Jumper wires</a>
+<br>
 -Micro USB cable and wall charger or recharhable battery pack

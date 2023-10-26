@@ -1,3 +1,4 @@
+//libraries
 #include <Wire.h>
 #include "DHT.h"
 #include <InfluxDbClient.h>
@@ -5,6 +6,7 @@
 #include <WiFiMulti.h>
 WiFiMulti wifiMulti;
 
+//variables for InfluxDB connection
 #define DEVICE "ESP32"
 #define WIFI_SSID //wifi network name
 #define WIFI_PASSWORD //wifi network password
@@ -14,10 +16,12 @@ WiFiMulti wifiMulti;
 #define INFLUXDB_BUCKET "Sensors" //this can be whatever you named your bucket
 #define TZ_INFO "UTC-7" //this can be adjusted to your timezone
 
-DHT dht(32,DHT22);   
+//first argument is GPIO pin number which must be ADC2. second argument is DHT model.
+DHT dht(32, DHT22);   
 
-const int DryValue = 3560; //this calibration value is based on my personal testing
-const int WetValue = 1662; //this calibration value is based on my personal testing
+const int DryValue = 3560; //average serial value when my sensors are completely dry. Calibrate your own for accuracy.
+const int WetValue = 1662; //average serial value when my sensors are submerged in water. Calibrate your own for accuracy.
+
 //variables to store sensor readings
 int temp = 0;
 int humid = 0;
@@ -40,17 +44,24 @@ public:
 };
 
 //the following GPIO pin numbers might differ based on your selections. They must be ADC2 pins to work with wifi.
+//you can use more than 5 sensors, so long as there are ADC2 pins available.
 Sensor sensors[] = {Sensor(33), Sensor(34), Sensor(35), Sensor(39), Sensor(36)};
 const int numSensors = sizeof(sensors) / sizeof(sensors[0]);
 
+//configure connection to InfluxDB
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
+
+//argument is datapoint name for each moisture sensor reading sent to InfluxDB/interpreted by Grafana
 Point dataPoint("moisturePercent");
 
 void setup() {
+    //set the serial baud rate
     Serial.begin(9600);
 
+    //initialize the dht22 sensor
     dht.begin();  
 
+    //connect to WiFi
     WiFi.mode(WIFI_STA);
     wifiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
 
@@ -66,6 +77,7 @@ void setup() {
 
     timeSync(TZ_INFO, "pool.ntp.org", "time.nis.gov");
 
+    //connect to InfluxDB
     if (client.validateConnection()) {
         Serial.print("Connected to InfluxDB: ");
         Serial.println(client.getServerUrl());
@@ -120,10 +132,12 @@ void loop() {
         dataPoint.addField("sensor" + String(i + 1) + "Percent", sensorPercent[i]);
     }
 
+    //error handling for loss of WiFi connection
     if (wifiMulti.run() != WL_CONNECTED) {
         Serial.println("Wifi connection lost");
     }
 
+    //error handling for failed write to InfluxDB
     if (!client.writePoint(dataPoint)) {
         Serial.print("InfluxDB write failed: ");
         Serial.println(client.getLastErrorMessage());
@@ -131,5 +145,5 @@ void loop() {
 
     //use ESP32's deep sleep feature to save power. Argument in microseconds.
     //Default to 1 reading per hour since moisture percentage changes slowly.
-    esp_deep_sleep(3600000000);  
+    esp_deep_sleep(3600000000);
 }

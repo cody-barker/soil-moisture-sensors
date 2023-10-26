@@ -34,4 +34,4 @@ If you'd like to contribute to this project, email me at codybarker.or@gmail.com
 Unlicensed
 
 ## Authors
-Cody Barker (with some of the intial DB/Wifi configuration code provided by Michael Klements)
+Cody Barker (with credit due to Michael Klements for much of the initial DB/WiFi configuration)

@@ -6,14 +6,14 @@
 #include <WiFiMulti.h>
 WiFiMulti wifiMulti;
 
-//variables for InfluxDB connection
+//variables for InfluxDB connection (use strings)
 #define DEVICE "ESP32"
 #define WIFI_SSID //wifi network name
 #define WIFI_PASSWORD //wifi network password
 #define INFLUXDB_URL "https://us-east-1-1.aws.cloud2.influxdata.com" //this works for USA
-#define INFLUXDB_TOKEN //influx db token
-#define INFLUXDB_ORG //influx db organization code
-#define INFLUXDB_BUCKET "Sensors" //this can be whatever you named your bucket
+#define INFLUXDB_TOKEN //add your influx db token
+#define INFLUXDB_ORG //add your influx db organization code
+#define INFLUXDB_BUCKET "Sensors" //this can be whatever you named your bucket. I named mine "Sensors"
 #define TZ_INFO "UTC-7" //this can be adjusted to your timezone
 
 //first argument is GPIO pin number which must be ADC1. second argument is DHT model.

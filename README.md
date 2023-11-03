@@ -9,8 +9,8 @@ Check out <a href="https://www.youtube.com/watch?v=7M8MHa6W9w0&t=1041s&ab_channe
 
 The ino files are written in C++/arduino.
 
-## Configuring Sensors
-Use config_sensors.ino to determine the DryValue and WetValue for your sensors. I have provided my default values in sensors.ino, but you should use config_sensors.ino to test your own.
+## Calibrating Sensors
+Use calibrate_sensors.ino to determine the DryValue and WetValue for your sensors. I have provided my default values in sensors.ino, but you should use calibrate_sensors.ino to test your own.
 
 To determine your WetValue, submerge the sensor up to the exposed electronic components. You may choose to cover the exposed components in silicon to protect them from moisture.
 

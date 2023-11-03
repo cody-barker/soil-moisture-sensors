@@ -16,7 +16,7 @@ WiFiMulti wifiMulti;
 #define INFLUXDB_BUCKET "Sensors" //this can be whatever you named your bucket
 #define TZ_INFO "UTC-7" //this can be adjusted to your timezone
 
-//first argument is GPIO pin number which must be ADC2. second argument is DHT model.
+//first argument is GPIO pin number which must be ADC1. second argument is DHT model.
 DHT dht(32, DHT22);   
 
 const int DryValue = 3560; //average serial value when my sensors are completely dry. Calibrate your own for accuracy.
@@ -43,8 +43,8 @@ public:
     }
 };
 
-//the following GPIO pin numbers might differ based on your selections. They must be ADC2 pins to work with wifi.
-//you can use more than 5 sensors, so long as there are ADC2 pins available.
+//the following GPIO pin numbers might differ based on your selections. They must be ADC1 pins to work with wifi.
+//you can use more than 5 sensors, so long as there are ADC1 pins available.
 Sensor sensors[] = {Sensor(33), Sensor(34), Sensor(35), Sensor(39), Sensor(36)};
 const int numSensors = sizeof(sensors) / sizeof(sensors[0]);
 

@@ -12,6 +12,12 @@ The ino files are written in C++/arduino.
 ## Configuring Sensors
 Use config_sensors.ino to determine the DryValue and WetValue for your sensors. I have provided my default values in sensors.ino, but you should use config_sensors.ino to test your own.
 
+To determine your WetValue, submerge the sensor up to the exposed electronic components. You may choose to cover the exposed components in silicon to protect them from moisture.
+
+To determine your DryValue, wipe the sensor with a dry towel to ensure it is as dry as possible.
+
+Use these values when setting up sensors.ino.
+
 ## Libraries
 Use the Arduino IDE Library Manager to install all of the libraries listed in sensors.ino.
 

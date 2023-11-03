@@ -7,7 +7,13 @@ The inspiration and initial InfuxDB/WiFi configuration code is adapted from <a h
 
 Check out <a href="https://www.youtube.com/watch?v=7M8MHa6W9w0&t=1041s&ab_channel=MichaelKlements">this video</a> from Michael Klements for help setting up the InfluxDB database, and configuring the Grafana dashboard.
 
-sensors.ino is written in C++/arduino
+The ino files are written in C++/arduino.
+
+## Configuring Sensors
+Use config_sensors.ino to determine the DryValue and WetValue for your sensors. I have provided my default values in sensors.ino, but you should use config_sensors.ino to test your own.
+
+## Libraries
+Use the Arduino IDE Library Manager to install all of the libraries listed in sensors.ino.
 
 ## Hardware
 -<a href="https://www.amazon.com/gp/product/B08246MCL5/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&th=1">

@@ -62,8 +62,8 @@ void setup()
 
 void loop()                                                          //Loop function
 {
-  sensor1Value = analogRead(sensor6Pin);
-  sensor1Percent = map(sensor6Value, DryValue, WetValue, 0, 100);
+  sensor1Value = analogRead(sensor1Pin);
+  sensor1Percent = map(sensor1Value, DryValue, WetValue, 0, 100);
   sensor.clearFields();
 
   if (sensor1Percent > 100)

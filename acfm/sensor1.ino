@@ -7,8 +7,8 @@ WiFiMulti wifiMulti;
 #include <InfluxDbClient.h>
 #include <InfluxDbCloud.h>
 
-#define WIFI_SSID "meadowrue"                                                                                         //Network Name
-#define WIFI_PASSWORD "ruelovescheese"                                                                                //Network Password
+#define WIFI_SSID //                                                                                        //Network Name
+#define WIFI_PASSWORD //                                                                           //Network Password
 #define INFLUXDB_URL "https://us-east-1-1.aws.cloud2.influxdata.com"                                                  //InfluxDB v2 server url, e.g. https://eu-central-1-1.aws.cloud2.influxdata.com (Use: InfluxDB UI -> Load Data -> Client Libraries)
 #define INFLUXDB_TOKEN "u2yNjH485PXUYjijzxo6KqfL0L_KjTegQAI5bDujuZ7U4ulD3TO0fCyxKAAc7khrQgG4BuORdzbxmDt24YOY9A=="     //InfluxDB v2 server or cloud API token (Use: InfluxDB UI -> Data -> API Tokens -> <select token>)
 #define INFLUXDB_ORG "2123b666e96aaaea"                                                                               //InfluxDB v2 organization id (Use: InfluxDB UI -> User -> About -> Common Ids )

@@ -1,5 +1,3 @@
-#include <Wire.h>
-#include <HardwareSerial.h>
 #include <WiFiMulti.h>
 #include <InfluxDbClient.h>
 #include <InfluxDbCloud.h>
@@ -31,7 +29,6 @@ SensorData sensorData[numSensors];
 int sensorPins[numSensors] = {A0, A1, A2};
 
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
-
 
 void setup()
 {

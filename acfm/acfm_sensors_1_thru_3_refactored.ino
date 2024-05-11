@@ -26,7 +26,7 @@ Point sensor("moisturePercent");
 
 SensorData sensorData[numSensors];
 
-int sensorPins[numSensors] = {A0, A1, A2};
+int sensorPins[numSensors] = {A2, A1, A0};
 
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
 
@@ -96,6 +96,11 @@ void readMoistureLevel()
     Serial.print(": ");
     Serial.print(sensorData[i].percent);
     Serial.println("%");
+    Serial.print("Sensor ");
+    Serial.print(i + 1);
+    Serial.print(": ");
+    Serial.print(sensorData[i].value);
+
 
     sensor.addField("sensor" + String(i + 1) + "Percent", sensorData[i].percent);
   }

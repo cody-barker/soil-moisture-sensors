@@ -23,6 +23,7 @@ struct SensorData {
 };
 
 Point sensor("moisturePercent");
+Point battery("batteryVoltage");
 
 SensorData sensorData[numSensors];
 
@@ -72,6 +73,8 @@ void setup()
 
   sensor.addTag("device", DEVICE);
   sensor.addTag("SSID", WIFI_SSID);
+  battery.addTag("device", DEVICE);
+  battery.addTag("SSID", WIFI_SSID);
 
   timeSync(TZ_INFO, "pool.ntp.org", "time.nis.gov");
 }
@@ -85,8 +88,8 @@ void loop()
 
   writeDataToInfluxDB();
 
-  // esp_deep_sleep(3600000000);
-  delay(5000);
+  esp_deep_sleep(3600000000);
+  // delay(5000);
 }
 
 void connectToWiFi()
@@ -131,8 +134,6 @@ void readMoistureLevel()
     Serial.print(": ");
     Serial.print(sensorData[i].value);
     Serial.println("");
-
-    sensor.addField("sensor" + String(i + 4) + "Percent", sensorData[i].percent);
   }
 }
 
@@ -148,13 +149,16 @@ void writeDataToInfluxDB()
   battery.addField("voltage", batteryVoltage);
   battery.addField("mappedVoltage", mappedVoltage); // Add the mapped voltage as a field
 
-  if (!client.writePoint(battery))
+  // Create a point for moisture sensor data
+  Point sensor("moisturePercent");
+  sensor.addField("sensor4Percent", sensorData[0].percent); // Assuming there's only one sensor
+
+  if (!client.writePoint(battery) || !client.writePoint(sensor))
   {
     Serial.print("InfluxDB write failed: ");
     Serial.println(client.getLastErrorMessage());
   }
 }
-
 
 bool checkWiFiConnection()
 {

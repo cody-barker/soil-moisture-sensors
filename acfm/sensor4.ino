@@ -12,9 +12,9 @@ WiFiMulti wifiMulti;
 #define INFLUXDB_BUCKET "acfmnursery"
 #define TZ_INFO "UTC+7"
 
-const int DryValue = 3951;
-const int WetValue = 2827;
-const int numSensors = 1;
+const int DryValue = 4025;
+const int WetValue = 1920;
+const int numSensors = 3; 
 
 struct SensorData {
   int pin;
@@ -26,13 +26,13 @@ Point sensor("moisturePercent");
 
 SensorData sensorData[numSensors];
 
-int sensorPins[numSensors] = {A0};
+int sensorPins[numSensors] = {A2, A0, A1};
 
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   WiFi.mode(WIFI_STA);
   wifiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
@@ -55,8 +55,8 @@ void loop()
 
   writeDataToInfluxDB();
 
-  // esp_deep_sleep(3600000000);
-  delay(5000);
+  esp_deep_sleep(3600000000);
+//   delay(5000);
 }
 
 void connectToWiFi()
@@ -92,16 +92,17 @@ void readMoistureLevel()
     sensorData[i].percent = constrain(sensorData[i].percent, 0, 100); // Ensure percent is within range
 
     Serial.print("Sensor ");
-    Serial.print(i + 4);
+    Serial.print(i + 1);
     Serial.print(": ");
     Serial.print(sensorData[i].percent);
     Serial.println("%");
     Serial.print("Sensor ");
-    Serial.print(i + 4);
+    Serial.print(i + 1);
     Serial.print(": ");
     Serial.print(sensorData[i].value);
+    Serial.println("");
 
-    sensor.addField("sensor" + String(i + 4) + "Percent", sensorData[i].percent);
+    sensor.addField("sensor" + String(i + 1) + "Percent", sensorData[i].percent);
   }
 }
 

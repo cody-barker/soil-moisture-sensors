@@ -30,23 +30,38 @@ int sensorPins[numSensors] = {A0};
 
 InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKEN, InfluxDbCloud2CACert);
 
-double measureBatteryVoltage() {
+float measureBatteryVoltage() {
   uint32_t Vbatt = 0;
   for(int i = 0; i < 16; i++) {
     Vbatt += analogReadMilliVolts(A1); // ADC with correction   
   }
-  double Vbattf = 2 * Vbatt / 16 / 1000.0; // attenuation ratio 1/2, mV --> V
-
+  float Vbattf = 2 * Vbatt / 16 / 1000.0; // attenuation ratio 1/2, mV --> V
+  Vbattf = round(Vbattf * 10.0) / 10.0;
   // Apply correction factor
-  double correctionFactor = 0.04; // Adjust this based on your measurements
-  Vbattf += correctionFactor;
+  // float correctionFactor = 0.04; // Adjust this based on your measurements
+  // Vbattf += correctionFactor;
 
   return Vbattf;
 }
 
+int mapVoltageToPercentage(float voltage) {
+  int voltageInt = int(voltage * 100); // Convert float to integer with appropriate precision
+  if (voltageInt >= 300 && voltageInt < 370) {
+    return map(voltageInt, 300, 370, 0, 30);
+  } else if (voltageInt >= 370 && voltageInt < 400) {
+    return map(voltageInt, 370, 400, 30, 70);
+  } else if (voltageInt >= 400 && voltageInt <= 420) {
+    return map(voltageInt, 400, 420, 70, 100);
+  } else {
+    Serial.println("Voltage out of range: " + String(voltage));
+    return -1; // Or any suitable default value
+  }
+}
+
+
 void setup()
 {
-  Serial.begin(9600); //keep this at 9600 or the esp32c3 won't load into the bootloader
+  Serial.begin(9600); //keep this at 9600 or the esp32c3 won't load into the bootloader. 
   pinMode(A1, INPUT);  
 
   WiFi.mode(WIFI_STA);
@@ -63,11 +78,6 @@ void setup()
 
 void loop()
 {
-  double batteryVoltage = measureBatteryVoltage();
-  double mappedVoltage = mapVoltageToPercentage(batteryVoltage);
-  Serial.println("Battery Voltage: " + String(batteryVoltage) + "V");
-  Serial.println("Battery Percentage: " + String(mappedVoltage) + "%");
-
   readMoistureLevel();
 
   if (!checkWiFiConnection())
@@ -104,10 +114,6 @@ void connectToInfluxDB()
   }
 }
 
-double mapVoltageToPercentage(double voltage) {
-  return map(voltage, 3, 4, 0, 100);
-}
-
 void readMoistureLevel()
 {
    for (int i = 0; i < numSensors; i++) {
@@ -132,8 +138,10 @@ void readMoistureLevel()
 
 void writeDataToInfluxDB()
 {
-  double batteryVoltage = measureBatteryVoltage();
-  double mappedVoltage = mapVoltageToPercentage(batteryVoltage);
+  float batteryVoltage = measureBatteryVoltage();
+  float mappedVoltage = mapVoltageToPercentage(batteryVoltage);
+  Serial.println("Battery Voltage: " + String(batteryVoltage) + "V");
+  Serial.println("Battery Percentage: " + String(mappedVoltage) + "%");
 
   // Create a point for battery voltage data
   Point battery("batteryVoltage");

@@ -14,7 +14,7 @@ WiFiMulti wifiMulti;
 
 const int DryValue = 4025;
 const int WetValue = 1920;
-const int numSensors = 3; 
+const int numSensors = 3;
 
 struct SensorData {
   int pin;
@@ -32,7 +32,7 @@ InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKE
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   WiFi.mode(WIFI_STA);
   wifiMulti.addAP(WIFI_SSID, WIFI_PASSWORD);
@@ -44,19 +44,31 @@ void setup()
   sensor.addTag("SSID", WIFI_SSID);
 
   timeSync(TZ_INFO, "pool.ntp.org", "time.nis.gov");
+
+   // Configure GPIO pins for sensors
+  configurePins();
 }
 
 void loop()
 {
-  readMoistureLevel();
-
   if (!checkWiFiConnection())
     Serial.println("Wifi connection lost");
+    
+  handleMoistureLevel();
 
-  writeDataToInfluxDB();
+  // Power off sensors before entering deep sleep
+  powerOffSensors();
+
 
   esp_deep_sleep(3600000000);
 //   delay(5000);
+}
+
+void configurePins() {
+  // Reconfigure GPIO pins for sensors
+  for (int i = 0; i < numSensors; i++) {
+    pinMode(sensorPins[i], INPUT_PULLUP);  // Example configuration, adjust as needed
+  }
 }
 
 void connectToWiFi()
@@ -84,35 +96,50 @@ void connectToInfluxDB()
   }
 }
 
-void readMoistureLevel()
-{
-   for (int i = 0; i < numSensors; i++) {
+void powerOnSensors() {
+  // Set GPIO pins for sensors to OUTPUT mode
+  for (int i = 0; i < numSensors; i++) {
+    pinMode(sensorPins[i], OUTPUT);
+    digitalWrite(sensorPins[i], HIGH);  // Turn on sensor
+  }
+}
+
+void powerOffSensors() {
+  // Set GPIO pins for sensors to INPUT mode
+  for (int i = 0; i < numSensors; i++) {
+    pinMode(sensorPins[i], INPUT);
+  }
+}
+
+void handleMoistureLevel() {
+
+ powerOnSensors();
+
+  for (int i = 0; i < numSensors; i++) {
     sensorData[i].value = analogRead(sensorPins[i]);
     sensorData[i].percent = map(sensorData[i].value, DryValue, WetValue, 0, 100);
     sensorData[i].percent = constrain(sensorData[i].percent, 0, 100); // Ensure percent is within range
 
     Serial.print("Sensor ");
-    Serial.print(i + 4);
+    Serial.print(i + 1);
     Serial.print(": ");
     Serial.print(sensorData[i].percent);
     Serial.println("%");
     Serial.print("Sensor ");
-    Serial.print(i + 4);
+    Serial.print(i + 1);
     Serial.print(": ");
     Serial.print(sensorData[i].value);
     Serial.println("");
 
-    sensor.addField("sensor" + String(i + 4) + "Percent", sensorData[i].percent);
+    sensor.addField("sensor" + String(i + 1) + "Percent", sensorData[i].percent);
   }
-}
 
-void writeDataToInfluxDB()
-{
   if (!client.writePoint(sensor))
   {
     Serial.print("InfluxDB write failed: ");
     Serial.println(client.getLastErrorMessage());
   }
+  
 }
 
 bool checkWiFiConnection()

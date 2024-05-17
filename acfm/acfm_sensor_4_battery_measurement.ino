@@ -34,13 +34,10 @@ InfluxDBClient client(INFLUXDB_URL, INFLUXDB_ORG, INFLUXDB_BUCKET, INFLUXDB_TOKE
 float measureBatteryVoltage() {
   uint32_t Vbatt = 0;
   for(int i = 0; i < 16; i++) {
-    Vbatt += analogReadMilliVolts(A1); // ADC with correction   
+    Vbatt += analogReadMilliVolts(A1);
   }
   float Vbattf = 2 * Vbatt / 16 / 1000.0; // attenuation ratio 1/2, mV --> V
   Vbattf = round(Vbattf * 10.0) / 10.0;
-  // Apply correction factor
-  // float correctionFactor = 0.04; // Adjust this based on your measurements
-  // Vbattf += correctionFactor;
 
   return Vbattf;
 }
@@ -48,11 +45,11 @@ float measureBatteryVoltage() {
 int mapVoltageToPercentage(float voltage) {
   int voltageInt = int(voltage * 100); // Convert float to integer with appropriate precision
   if (voltageInt >= 300 && voltageInt < 370) {
-    return map(voltageInt, 300, 370, 0, 30);
-  } else if (voltageInt >= 370 && voltageInt < 400) {
-    return map(voltageInt, 370, 400, 30, 70);
-  } else if (voltageInt >= 400 && voltageInt <= 420) {
-    return map(voltageInt, 400, 420, 70, 100);
+    return map(voltageInt, 300, 369, 0, 84);
+  } else if (voltageInt >= 370 && voltageInt < 390) {
+    return map(voltageInt, 370, 389, 85, 89);
+  } else if (voltageInt >= 390 && voltageInt <= 420) {
+    return map(voltageInt, 390, 420, 90, 100);
   } else {
     Serial.println("Voltage out of range: " + String(voltage));
     return -1; // Or any suitable default value

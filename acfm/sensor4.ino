@@ -14,7 +14,7 @@ WiFiMulti wifiMulti;
 
 const int DryValue = 4025;
 const int WetValue = 1920;
-const int numSensors = 3; 
+const int numSensors = 3;
 
 struct SensorData {
   int pin;

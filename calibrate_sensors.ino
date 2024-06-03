@@ -13,5 +13,6 @@ void loop() {
   Serial.print("Moisture value: ");
   Serial.println(value);
 
+  //1 sec delay
   delay(1000);
 }
